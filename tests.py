@@ -6,9 +6,6 @@ class TestStuff(TestCase):
         app.testing = True
         self.client = app.test_client()
 
-    def tearDown(self):
-        self.logout()
-
     def login(self, username):
         return self.client.post('/login', data={'username': 'admin'},
                                 follow_redirects=True)
