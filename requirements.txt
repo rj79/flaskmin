@@ -1,2 +1,4 @@
 flask
+flask-bootstrap
 flask-login
+flask-wtf

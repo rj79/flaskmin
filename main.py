@@ -1,5 +1,9 @@
-from flask import Flask, redirect, request, url_for
+from flask import Flask, redirect, render_template, request, url_for
+from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, login_required, login_user, logout_user
+from flask_wtf import FlaskForm
+from wtforms import PasswordField, StringField, SubmitField
+from wtforms.validators import DataRequired
 
 class User:
     def __init__(self, username):
@@ -17,9 +21,14 @@ class User:
     def get_id(self):
         return self.username
 
+class LoginForm(FlaskForm):
+    username = StringField('User name', validators=[DataRequired()])
+    submit = SubmitField('Log in')
+
 
 login_manager = LoginManager()
 login_manager.login_view = 'login'
+bootstrap = Bootstrap()
 
 admin = User('admin')
 users = [admin]
@@ -35,6 +44,7 @@ def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'You will never guess'
     login_manager.init_app(app)
+    bootstrap.init_app(app)
     return app
 
 
@@ -55,14 +65,15 @@ def restricted():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
+    form = LoginForm()
+    if form.validate_on_submit():
         username = request.form['username']
         for user in users:
             if user.username == username:
                 login_user(user)
                 return redirect(url_for('restricted'))
         return "Login failed"
-    return "Login page"
+    return render_template('login.html', form=form)
 
 @app.route('/logout')
 @login_required

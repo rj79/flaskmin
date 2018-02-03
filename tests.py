@@ -4,7 +4,9 @@ from main import app
 class TestStuff(TestCase):
     def setUp(self):
         app.testing = True
+        app.config['WTF_CSRF_ENABLED'] = False
         self.client = app.test_client()
+        app.app_context().push()
 
     def login(self, username):
         return self.client.post('/login', data={'username': 'admin'},
@@ -28,4 +30,4 @@ class TestStuff(TestCase):
 
     def test_restricted_not_accessible_if_not_logged_in(self):
         rv = self.client.get('/restricted', follow_redirects=True)
-        self.assertTrue(b'Login page' in rv.data)
+        self.assertTrue(b'Log in' in rv.data)
