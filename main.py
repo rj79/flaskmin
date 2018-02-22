@@ -6,8 +6,9 @@ from wtforms import PasswordField, StringField, SubmitField
 from wtforms.validators import DataRequired
 
 class User:
-    def __init__(self, username):
+    def __init__(self, username, password):
         self.username = username
+        self.password = password
 
     def is_authenticated(self):
         return True
@@ -22,7 +23,8 @@ class User:
         return self.username
 
 class LoginForm(FlaskForm):
-    username = StringField('User name', validators=[DataRequired()])
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Log in')
 
 
@@ -30,7 +32,7 @@ login_manager = LoginManager()
 login_manager.login_view = 'login'
 bootstrap = Bootstrap()
 
-admin = User('admin')
+admin = User('admin', 'password')
 users = [admin]
 
 @login_manager.user_loader
@@ -67,7 +69,8 @@ def restricted():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        username = request.form['username']
+        username = form.username.data
+        password = form.password.data
         for user in users:
             if user.username == username:
                 login_user(user)

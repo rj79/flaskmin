@@ -1,33 +1,28 @@
 from unittest import TestCase
 from main import app
+from csrf_decorator import FlaskClient
 
 class TestStuff(TestCase):
     def setUp(self):
         app.testing = True
-        app.config['WTF_CSRF_ENABLED'] = False
+        # app.config['WTF_CSRF_ENABLED'] = False
+        app.test_client_class = FlaskClient
         self.client = app.test_client()
         app.app_context().push()
 
-    def login(self, username):
-        return self.client.post('/login', data={'username': 'admin'},
-                                follow_redirects=True)
-
-    def logout(self):
-        return self.client.get('/logout', follow_redirects=True)
-
-    def test_public(self):
+    def test_01_public(self):
         rv = self.client.get('/')
         self.assertTrue(b'Public' in rv.data)
 
-    def test_redirect(self):
+    def test_02_redirect(self):
         rv = self.client.get('/redirect', follow_redirects=True)
         self.assertTrue(b'Public' in rv.data)
 
-    def test_restricted(self):
-        self.login('admin')
+    def test_03_restricted(self):
+        self.client.login('admin', 'password')
         rv = self.client.get('/restricted', follow_redirects=True)
         self.assertTrue(b'Restricted' in rv.data)
 
-    def test_restricted_not_accessible_if_not_logged_in(self):
+    def test_04_restricted_not_accessible_if_not_logged_in(self):
         rv = self.client.get('/restricted', follow_redirects=True)
         self.assertTrue(b'Log in' in rv.data)
