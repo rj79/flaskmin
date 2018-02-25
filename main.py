@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager, login_required, login_user, logout_user
 from flask_wtf import FlaskForm
@@ -54,7 +54,7 @@ app = create_app()
 
 @app.route('/')
 def index():
-    return 'Public index'
+    return render_template('public.html')
 
 @app.route('/redirect')
 def do_redirect():
@@ -63,7 +63,7 @@ def do_redirect():
 @app.route('/restricted')
 @login_required
 def restricted():
-    return "Restricted"
+    return render_template('restricted.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -75,11 +75,11 @@ def login():
             if user.username == username:
                 login_user(user)
                 return redirect(url_for('restricted'))
-        return "Login failed"
+        flash('Login failed')
     return render_template('login.html', form=form)
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return 'Logged out'
+    return render_template('logout.html')
