@@ -2,7 +2,7 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content %}
-Public index
+This page is public.
 <ul>
 <li><a href="{{ url_for('main.restricted') }}">Restricted</a></li>
 {% if not current_user.is_authenticated %}

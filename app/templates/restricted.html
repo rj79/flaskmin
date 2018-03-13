@@ -2,7 +2,7 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content %}
-Restricted page.
+This page is only visible to logged in users.
 <ul>
 <li><a href="{{ url_for('main.index')}}">Public</a></li>
 <li><a href="{{ url_for('main.logout')}}">Logout</a></li>
