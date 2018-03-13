@@ -1,0 +1,10 @@
+{% extends 'bootstrap/base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+Restricted page.
+<ul>
+<li><a href="{{ url_for('main.index')}}">Public</a></li>
+<li><a href="{{ url_for('main.logout')}}">Logout</a></li>
+</ul>
+{% endblock %}
