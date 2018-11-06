@@ -23,6 +23,7 @@ class RequestShim(object):
     """
     def __init__(self, client):
         self.client = client
+        self.vary = set({})
 
     def set_cookie(self, key, value='', *args, **kwargs):
         "Set the cookie on the Flask test client."
