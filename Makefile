@@ -1,4 +1,4 @@
-HOST_PYTHON=$(shell which python3.6 || which python 3.5 || false)
+HOST_PYTHON=$(shell which python3.7 || which python3.6 || which python 3.5 || false)
 VENV=.venv
 PYTHON=$(VENV)/bin/python
 PIP=$(VENV)/bin/pip
